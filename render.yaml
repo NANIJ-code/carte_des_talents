@@ -3,7 +3,7 @@ services:
     name: carte-des-talents
     env: docker
     dockerfilePath: ./Dockerfile
-    dockerContext: ./talent-map-app
+    dockerContext: ./
     plan: free
     buildCommand: ""
     startCommand: ""
