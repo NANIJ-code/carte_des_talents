@@ -6,6 +6,8 @@ from .models import UserProfile
 from .forms import UserRegistrationForm, UserProfileForm, SearchForm
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.db import IntegrityError, transaction
+from django.contrib.auth.models import User
 import re
 
 def home(request):
@@ -15,26 +17,32 @@ def home(request):
 def signup(request):
     """
     Inscription : crée l'utilisateur + son profile si les deux formulaires sont valides.
-    Utilise password1/password2 fournis par UserRegistrationForm (UserCreationForm).
+    Protection contre doublons de username (unique constraint).
     """
     if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST)
-        profile_form = UserProfileForm(request.POST)
+        profile_form = UserProfileForm(request.POST, request.FILES)
         if user_form.is_valid() and profile_form.is_valid():
-            # crée et sauvegarde l'utilisateur (UserCreationForm gère le hash du mot de passe)
-            user = user_form.save(commit=False)
-            user.email = user_form.cleaned_data.get('email', '')
-            user.save()
-
-            # crée et associe le profile
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
-
-            # connexion automatique et redirection vers le détail du profil
-            login(request, user)
-            messages.success(request, "Compte créé et profil enregistré.")
-            return redirect('profile_detail', pk=user.profile.pk)
+            username = user_form.cleaned_data.get('username')
+            email = user_form.cleaned_data.get('email', '')
+            # double-check existence avant tentative d'insertion
+            if User.objects.filter(username__iexact=username).exists():
+                messages.error(request, "Le nom d'utilisateur est déjà utilisé. Choisissez-en un autre.")
+            else:
+                try:
+                    with transaction.atomic():
+                        user = user_form.save(commit=False)
+                        user.email = email
+                        user.save()  # création user
+                        profile = profile_form.save(commit=False)
+                        profile.user = user
+                        profile.save()
+                        login(request, user)
+                        messages.success(request, "Compte créé et profil enregistré.")
+                        return redirect('profile_detail', pk=user.profile.pk)
+                except IntegrityError:
+                    # protège contre race condition ou insertion concurrente
+                    messages.error(request, "Erreur lors de la création du compte : nom d'utilisateur déjà utilisé.")
         else:
             messages.error(request, "Corrigez les erreurs du formulaire.")
     else:
