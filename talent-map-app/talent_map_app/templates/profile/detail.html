@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# Template d'affichage du profil utilisateur. Reste simple et clair pour une UX cohérente. #}
+
+{% block title %}Profil - {{ profile.user.username }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <h3 class="mb-0 me-3">{{ profile.user.get_full_name|default:profile.user.username }}</h3>
+                        <span class="text-muted">• inscrit le {{ profile.created_at|date:"d/m/Y" }}</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-semibold">Courte biographie</h6>
+                        <p class="text-muted mb-0">{{ profile.bio|default:"Aucune description fournie." }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-semibold">Compétences</h6>
+                        <div class="mb-2">
+                            {% if profile.skills %}
+                                {% for skill in profile.skills.split(',') %}
+                                    {% if skill|trim %}
+                                        <span class="skill-badge" title="{{ skill|trim }}">{{ skill|trim }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted small mb-0">Aucune compétence renseignée.</p>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted d-block mt-2">Séparez les compétences par des virgules pour faciliter la recherche et la visualisation.</small>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <h6 class="fw-semibold">Niveau d'études</h6>
+                            <p class="text-muted mb-0">{{ profile.education_level|capfirst }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="fw-semibold">Langues</h6>
+                            <p class="text-muted mb-0">{{ profile.languages|default:"Non renseigné" }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="fw-semibold">Validé</h6>
+                            <p class="mb-0">
+                                {% if profile.is_validated %}
+                                    <span class="badge bg-success">Oui</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Non</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-semibold">Projets / Réalisations</h6>
+                        <p class="text-muted mb-0">{{ profile.projects|default:"Aucun projet listé." }}</p>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-4">
+                        {% if profile.linkedin %}
+                            <a href="{{ profile.linkedin }}" class="btn btn-outline-primary btn-sm" target="_blank">LinkedIn</a>
+                        {% endif %}
+                        {% if profile.github %}
+                            <a href="{{ profile.github }}" class="btn btn-outline-dark btn-sm" target="_blank">GitHub</a>
+                        {% endif %}
+                        {% if profile.website %}
+                            <a href="{{ profile.website }}" class="btn btn-outline-secondary btn-sm" target="_blank">Site</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

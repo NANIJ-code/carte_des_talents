@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Trouver des collaborateurs{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card p-3 shadow-sm border-0">
+                <h5 class="mb-3">Filtrer les profils</h5>
+                <form method="get">
+                    {{ form.q|as_crispy_field }}
+                    <div class="mb-3">{{ form.education_level|as_crispy_field }}</div>
+                    <div class="mb-3">{{ form.language|as_crispy_field }}</div>
+                    <div class="mb-3">{{ form.sort_by|as_crispy_field }}</div>
+                    <div class="d-grid">
+                        <button class="btn btn-primary">Rechercher</button>
+                    </div>
+                </form>
+            </div>
+            <div class="mt-3 text-muted small">
+                Astuce : séparez les compétences par des virgules dans votre recherche (ex: "Python, Django").
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <h4 class="mb-3">Résultats</h4>
+            {% if results %}
+                <div class="list-group">
+                    {% for profile in results %}
+                        <div class="list-group-item mb-3 shadow-sm rounded">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <div>
+                                    <h6 class="mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h6>
+                                    <div class="small text-muted mb-2">@{{ profile.user.username }} • {{ profile.education_level|capfirst }}</div>
+
+                                    <div class="mb-2">
+                                        {% if profile.skills %}
+                                            {% for skill in profile.skills.split(',') %}
+                                                {% if skill|trim %}
+                                                    <span class="skill-badge" title="{{ skill|trim }}">{{ skill|trim }}</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="text-muted small">Aucune compétence renseignée</span>
+                                        {% endif %}
+                                    </div>
+
+                                    <p class="mb-0 text-muted small">{{ profile.bio|truncatechars:140 }}</p>
+                                </div>
+
+                                <div class="text-end">
+                                    <a href="{% url 'profile_detail' profile.user.id %}" class="btn btn-outline-secondary btn-sm mb-2">Voir le profil</a>
+                                    <a href="{% url 'talent_map' profile.user.id %}" class="btn btn-accent btn-sm">Voir la carte</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">Aucun collaborateur trouvé — essayez d'élargir votre recherche.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

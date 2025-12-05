@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Accueil - Talents Map{% endblock %}
+
+{% block content %}
+<!-- Section Hero -->
+<section class="hero-section" style="background: linear-gradient(135deg, #97B3D9 0%, #7990AE 100%); color: white; padding: 80px 0;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Bienvenue sur Talents Map</h1>
+                <p class="lead mb-4">Créez votre carte de talents unique et trouvez les collaborateurs idéaux pour vos projets.</p>
+                <div class="d-flex gap-3">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'profile_create' %}" class="btn btn-light btn-lg fw-bold">
+                            <i class="bi bi-plus-circle"></i> Modifier ma Carte
+                        </a>
+                        <a href="{% url 'search' %}" class="btn btn-outline-light btn-lg fw-bold">
+                            <i class="bi bi-search"></i> Trouver des Collaborateurs
+                        </a>
+                    {% else %}
+                        <a href="{% url 'signup' %}" class="btn btn-light btn-lg fw-bold">
+                            <i class="bi bi-person-plus"></i> S'inscrire Maintenant
+                        </a>
+                        <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg fw-bold">
+                            <i class="bi bi-box-arrow-in-right"></i> Se Connecter
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="illustration" style="font-size: 120px; opacity: 0.9;">
+                    <i class="bi bi-diagram-3"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section Vision, Mission, Plus-value -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5" style="color: #7990AE; font-size: 2.5rem;">Pourquoi Talents Map ?</h2>
+        
+        <div class="row g-4">
+            <!-- Vision -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100" style="border-top: 4px solid #7990AE;">
+                    <div class="card-body p-4">
+                        <div class="mb-3" style="font-size: 3rem; color: #7990AE;">
+                            <i class="bi bi-telescope"></i>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Notre Vision</h5>
+                        <p class="card-text text-muted">
+                            Créer un écosystème où les talents se rencontrent, collaborent et s'épanouissent ensemble, en brisant les silos et en favorisant l'innovation collective.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mission -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100" style="border-top: 4px solid #7990AE;">
+                    <div class="card-body p-4">
+                        <div class="mb-3" style="font-size: 3rem; color: #7990AE;">
+                            <i class="bi bi-rocket-takeoff"></i>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Notre Mission</h5>
+                        <p class="card-text text-muted">
+                            Mapper et valoriser les compétences de chacun, faciliter la recherche de collaborateurs pertinents et accélérer la création de projets collaboratifs de qualité.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plus-value -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100" style="border-top: 4px solid #7990AE;">
+                    <div class="card-body p-4">
+                        <div class="mb-3" style="font-size: 3rem; color: #7990AE;">
+                            <i class="bi bi-lightning-fill"></i>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Notre Valeur Ajoutée</h5>
+                        <p class="card-text text-muted">
+                            Une plateforme intuitive où vos talents brillent, où la validation crédibilise votre profil, et où les collaborations idéales se font naturellement.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section Fonctionnalités Clés -->
+<section class="py-5" style="background-color: #f8f9fa;">
+    <div class="container">
+        <h2 class="text-center mb-5" style="color: #7990AE; font-size: 2.5rem;">Nos Fonctionnalités</h2>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center">
+                    <div style="font-size: 2.5rem; color: #97B3D9; margin-bottom: 1rem;">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">Profil Complet</h6>
+                    <p class="text-muted small">Compétences, langues, projets, passions en un seul endroit</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center">
+                    <div style="font-size: 2.5rem; color: #97B3D9; margin-bottom: 1rem;">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">Carte Interactive</h6>
+                    <p class="text-muted small">Visualisez vos talents sous forme de graphe dynamique</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center">
+                    <div style="font-size: 2.5rem; color: #97B3D9; margin-bottom: 1rem;">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">Recherche Avancée</h6>
+                    <p class="text-muted small">Filtres par compétences, langues, domaines et plus</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="text-center">
+                    <div style="font-size: 2.5rem; color: #97B3D9; margin-bottom: 1rem;">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">Badge Validé</h6>
+                    <p class="text-muted small">Profils vérifiés par les responsables</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section Call-to-Action -->
+<section class="py-5" style="background: linear-gradient(135deg, #7990AE 0%, #97B3D9 100%); color: white;">
+    <div class="container text-center">
+        <h2 class="mb-4 fw-bold">Prêt à partager vos talents ?</h2>
+        <p class="lead mb-4">Rejoignez des milliers de talents et trouvez vos collaborateurs idéaux dès aujourd'hui.</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'signup' %}" class="btn btn-light btn-lg fw-bold">
+                <i class="bi bi-star-fill"></i> Commencer Maintenant
+            </a>
+        {% else %}
+            <a href="{% url 'profile_create' %}" class="btn btn-light btn-lg fw-bold">
+                <i class="bi bi-plus-circle"></i> Modifier Ma Carte
+            </a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Créer / Éditer mon profil{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h3 class="mb-3">Modifier ma carte de talents</h3>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        <div class="mb-3">
+                            {{ form.bio|as_crispy_field }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Compétences (séparées par des virgules)</label>
+                            {{ form.skills|as_crispy_field }}
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                {{ form.education_level|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.languages|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="mb-3 mt-3">
+                            {{ form.projects|as_crispy_field }}
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">{{ form.linkedin|as_crispy_field }}</div>
+                            <div class="col-md-6">{{ form.github|as_crispy_field }}</div>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-primary">Enregistrer ma carte</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+/* Palette CESI : bleu foncé, jaune/orangé vif, blanc, gris clair/foncé */
+:root{
+    --cesi-blue: #0b3b66;        /* bleu foncé principal */
+    --cesi-accent: #ffb400;      /* jaune/orangé vif accent */
+    --bg-white: #ffffff;
+    --gray-100: #f5f6f8;         /* fond clair */
+    --gray-300: #e1e3e8;
+    --gray-600: #6c6f76;         /* texte secondaire */
+    --text-default: #222428;
+    --card-shadow: rgba(11,59,102,0.08);
+}
+
+/* Reset / base */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color:var(--text-default);
+    background-color:var(--bg-white);
+    -webkit-font-smoothing:antialiased;
+}
+
+/* Navigation */
+.navbar{padding:1rem 0}
+.navbar-brand{font-size:1.4rem;color:var(--cesi-blue) !important;font-weight:700}
+.navbar-brand i{margin-right:0.5rem}
+.nav-link{color:var(--gray-600) !important;font-weight:500;transition:color .2s ease}
+.nav-link:hover{color:var(--cesi-blue) !important}
+
+/* Hero */
+.hero-section{margin-top:-88px;padding-top:150px}
+.hero-section h1{font-weight:700;line-height:1.15;color:var(--cesi-blue)}
+.hero-section p{font-size:1.15rem;opacity:.95;color:var(--gray-600)}
+.illustration{animation:float 3s ease-in-out infinite;color:var(--cesi-accent)}
+
+/* animation */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+
+/* Buttons: primary = bleu foncé, accent = jaune/orangé */
+.btn{border-radius:10px;padding:.6rem 1.1rem;font-weight:600;transition:all .18s ease}
+.btn-primary{
+    background:var(--cesi-blue) !important;
+    color:var(--bg-white) !important;
+    border:0;
+    box-shadow:0 6px 18px rgba(11,59,102,0.08);
+}
+.btn-primary:hover{filter:brightness(.95);transform:translateY(-2px)}
+
+.btn-accent{
+    background:var(--cesi-accent);
+    color:var(--cesi-blue);
+    border:0;
+    font-weight:700;
+}
+.btn-outline-accent{
+    background:transparent;border:2px solid var(--cesi-accent);color:var(--cesi-accent)
+}
+
+/* Light buttons for hero where background is colored */
+.btn-light{
+    background:var(--bg-white);
+    color:var(--cesi-blue) !important;
+    border-radius:10px;
+}
+.btn-outline-light{
+    color:var(--bg-white) !important;border:2px solid var(--bg-white)
+}
+
+/* Cards */
+.card{
+    border-radius:12px;transition:transform .25s ease,box-shadow .25s ease;border:0;background:var(--bg-white);
+}
+.card:hover{transform:translateY(-6px);box-shadow:0 12px 30px var(--card-shadow)}
+.card-title{color:var(--cesi-blue);font-weight:700}
+
+/* Sections */
+section{padding-top:2.5rem;padding-bottom:2.5rem}
+section h2{font-weight:800;color:var(--cesi-blue)}
+
+/* Form controls */
+.form-control,.form-select{
+    border:1px solid var(--gray-300);border-radius:10px;padding:.75rem;
+}
+.form-control:focus,.form-select:focus{
+    border-color:var(--cesi-blue);box-shadow:0 0 0 .15rem rgba(11,59,102,0.08)
+}
+.form-label{font-weight:600;color:var(--gray-600);margin-bottom:.5rem}
+
+/* Badges and highlights */
+.badge-verified{
+    background:linear-gradient(90deg,var(--cesi-accent),#ff9e00);
+    color:var(--cesi-blue);padding:.45rem .9rem;border-radius:20px;font-weight:700;
+    display:inline-flex;align-items:center;gap:.5rem
+}
+.skill-badge{
+    display:inline-block;padding:.35rem .6rem;border-radius:999px;background:var(--gray-100);
+    color:var(--cesi-blue);font-weight:600;margin-right:.4rem;margin-bottom:.4rem;border:1px solid var(--gray-300)
+}
+
+/* Footer */
+footer{margin-top:auto;background:var(--gray-100);color:var(--gray-600)}
+
+/* Responsive tweaks */
+@media (max-width:768px){
+    .hero-section{padding-top:110px}
+    .illustration{font-size:80px}
+    .btn{padding:.6rem 1rem}
+}
+
+/* Utility */
+.text-muted{color:var(--gray-600) !important}
+.small{font-size:.875rem}

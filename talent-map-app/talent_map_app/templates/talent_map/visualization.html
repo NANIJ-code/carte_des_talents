@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Map Visualization</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    {% include 'base.html' %}
+    
+    <div class="container mt-5">
+        <h1 class="text-center">Talent Map Visualization</h1>
+        <div id="talent-map" style="height: 600px;"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/talent-map.js' %}"></script>
+    <script>
+        // Initialize the talent map visualization
+        $(document).ready(function() {
+            const talentData = {{ talent_data|safe }};
+            // Call a function to render the talent map using talentData
+            renderTalentMap(talentData);
+        });
+    </script>
+</body>
+</html>
