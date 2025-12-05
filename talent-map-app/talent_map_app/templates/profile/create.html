@@ -17,10 +17,32 @@
                         {{ form.non_field_errors }}
                         <div class="mb-3">
                             {{ form.bio|as_crispy_field }}
+                            <div class="form-text small text-muted">
+                                Indiquez vos expériences courtes et mentionnez aussi vos passions (ex : IA, Web, Mobile).
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Compétences (séparées par des virgules)</label>
-                            {{ form.skills|as_crispy_field }}
+                            <label class="form-label fw-semibold">Compétences</label>
+                            <div id="skills-list">
+                                {% with skills_list=form.instance.skills_list %}
+                                    {% for skill in skills_list %}
+                                        <div class="input-group mb-2 skill-item">
+                                            <input type="text" name="skills" class="form-control skill-input" value="{{ skill }}" placeholder="Ex: Python">
+                                            <button type="button" class="btn btn-outline-danger btn-remove" title="Supprimer">×</button>
+                                        </div>
+                                    {% endfor %}
+                                    {% if not skills_list %}
+                                        <div class="input-group mb-2 skill-item">
+                                            <input type="text" name="skills" class="form-control skill-input" value="" placeholder="Ex: Python">
+                                            <button type="button" class="btn btn-outline-danger btn-remove" title="Supprimer">×</button>
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                            <div class="mt-2">
+                                <button id="add-skill" type="button" class="btn btn-sm btn-outline-primary">+ Plus</button>
+                                <span class="form-text small text-muted ms-2">Ajoute un champ par compétence. Les valeurs seront enregistrées automatiquement.</span>
+                            </div>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -47,4 +69,8 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'js/talent-map.js' %}"></script>
 {% endblock %}

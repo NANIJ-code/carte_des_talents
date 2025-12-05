@@ -1,40 +1,68 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile, Collaboration
 
 
-class UserProfileForm(forms.ModelForm):
-    """Formulaire ModelForm pour décrire les talents et informations du profil.
+class UserRegistrationForm(UserCreationForm):
+    email = forms.EmailField(required=True, help_text="Adresse e‑mail valide (obligatoire).")
+    first_name = forms.CharField(required=False)
+    last_name = forms.CharField(required=False)
 
-    Contient des widgets adaptés pour une saisie claire et un rendu cohérent
-    avec Bootstrap / crispy-forms.
-    """
+    class Meta:
+        model = User
+        fields = ("username", "first_name", "last_name", "email", "password1", "password2")
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("Un compte utilise déjà cette adresse e‑mail.")
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data.get('email', '')
+        user.first_name = self.cleaned_data.get('first_name', '')
+        user.last_name = self.cleaned_data.get('last_name', '')
+        if commit:
+            user.save()
+        return user
+
+
+class UserProfileForm(forms.ModelForm):
+    bio = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 4}),
+        required=True,
+        help_text="Courte bibliographie : décrivez votre expérience et mentionnez également vos passions (ex : IA, Web, Mobile)."
+    )
+
     class Meta:
         model = UserProfile
         fields = [
-            'education_level',
-            'bio',
-            'skills',
-            'languages',
-            'passions',
-            'projects',
-            'linkedin',
-            'github',
-            'youtube',
-            'website',
+            'bio', 'skills', 'education_level', 'languages',
+            'passions', 'projects', 'linkedin', 'github', 'website'
         ]
         widgets = {
-            'education_level': forms.Select(attrs={'class': 'form-select'}),
-            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Courte présentation'}),
-            'skills': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Ex: Python, Django, JavaScript'}),
-            'languages': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Ex: Français, Anglais'}),
-            'passions': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Ex: IA, Web, Mobile'}),
-            'projects': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Projets réalisés'}),
-            'linkedin': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://linkedin.com/in/...'}),
-            'github': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://github.com/...'}),
-            'youtube': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://youtube.com/...'}),
-            'website': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://votre-site.com'}),
+            'skills': forms.TextInput(attrs={'placeholder': 'Utilisé uniquement en fallback (non visible)'}),
+            'languages': forms.TextInput(attrs={'placeholder': 'Ex: Français, Anglais'}),
+            'passions': forms.TextInput(attrs={'placeholder': 'Ex: IA, Jeux, Robotique'}),
         }
+
+    def clean_skills(self):
+        """
+        Récupère toutes les valeurs POST nommées 'skills' (plusieurs inputs possibles)
+        puis normalise en chaîne séparée par des virgules stockée en base.
+        """
+        # self.data est un QueryDict => getlist retourne toutes les valeurs du même nom
+        raw_list = []
+        try:
+            raw_list = self.data.getlist('skills')
+        except Exception:
+            raw_val = self.cleaned_data.get('skills') or ''
+            raw_list = [raw_val]
+
+        cleaned = [s.strip() for s in raw_list if s and s.strip()]
+        return ', '.join(cleaned)
 
 
 class CollaborationForm(forms.ModelForm):
@@ -48,38 +76,6 @@ class CollaborationForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Décrivez votre besoin en collaborateurs'}),
             'required_skills': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Ex: Python, Django, React'}),
         }
-
-
-class UserRegistrationForm(forms.ModelForm):
-    """Formulaire d'inscription utilisateur avec confirmation de mot de passe.
-
-    Le formulaire expose username, email, first_name, last_name, password et password_confirm.
-    """
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mot de passe'}))
-    password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmer le mot de passe'}))
-
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom d\'utilisateur'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}),
-        }
-
-    def clean(self):
-        """
-        Validation : vérifie la confirmation du mot de passe.
-        """
-        cleaned_data = super().clean()
-        password = cleaned_data.get('password')
-        password_confirm = cleaned_data.get('password_confirm')
-
-        if password and password_confirm and password != password_confirm:
-            raise forms.ValidationError("Les mots de passe ne correspondent pas.")
-
-        return cleaned_data
 
 
 class SearchForm(forms.Form):

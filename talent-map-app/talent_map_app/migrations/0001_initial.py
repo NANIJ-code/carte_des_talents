@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='UserProfile',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('education_level', models.CharField(choices=[('bac', 'Baccalauréat'), ('licence', 'Licence'), ('master', 'Master'), ('doctorat', 'Doctorat'), ('autre', 'Autre')], default='licence', max_length=20)),
+                ('education_level', models.CharField(choices=[('bac', 'Baccalauréat'), ('licence', 'Licence'), ('master', 'Master'), ('Ingénieur', 'Ingénieur'), ('autre', 'Autre')], default='licence', max_length=20)),
                 ('bio', models.TextField(blank=True, help_text='Courte biographie', null=True)),
                 ('skills', models.TextField(blank=True, help_text='Ex: Python, Django, JavaScript', null=True)),
                 ('languages', models.TextField(blank=True, help_text='Ex: Français, Anglais, Espagnol', null=True)),

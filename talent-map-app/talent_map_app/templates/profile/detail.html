@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load skill_extras %}
 
 {# Template d'affichage du profil utilisateur. Reste simple et clair pour une UX cohérente. #}
 
@@ -9,7 +10,7 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div class="card shadow-sm border-0">
+            <div class="card shadow-sm border-0 profile-card">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center mb-3">
                         <h3 class="mb-0 me-3">{{ profile.user.get_full_name|default:profile.user.username }}</h3>
@@ -25,10 +26,8 @@
                         <h6 class="fw-semibold">Compétences</h6>
                         <div class="mb-2">
                             {% if profile.skills %}
-                                {% for skill in profile.skills.split(',') %}
-                                    {% if skill|trim %}
-                                        <span class="skill-badge" title="{{ skill|trim }}">{{ skill|trim }}</span>
-                                    {% endif %}
+                                {% for skill in profile.skills|split:',' %}
+                                    <span class="skill-badge" title="{{ skill }}">{{ skill }}</span>
                                 {% endfor %}
                             {% else %}
                                 <p class="text-muted small mb-0">Aucune compétence renseignée.</p>
@@ -79,4 +78,8 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'js/talent-map.js' %}"></script>
 {% endblock %}

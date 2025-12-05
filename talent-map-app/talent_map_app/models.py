@@ -8,8 +8,7 @@ class UserProfile(models.Model):
         ('bac', 'Baccalauréat'),
         ('licence', 'Licence'),
         ('master', 'Master'),
-        ('doctorat', 'Doctorat'),
-        ('autre', 'Autre'),
+        ('Ingénieur', 'Ingénieur'),
     ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -52,6 +51,13 @@ class UserProfile(models.Model):
     
     def __str__(self):
         return f"Profil de {self.user.username}"
+    
+    @property
+    def skills_list(self):
+        """Retourne la liste des compétences séparées par des virgules, sans éléments vides."""
+        if not self.skills:
+            return []
+        return [s.strip() for s in str(self.skills).split(',') if s.strip()]
 
 
 class Collaboration(models.Model):

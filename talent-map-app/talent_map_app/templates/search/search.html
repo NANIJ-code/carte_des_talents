@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load skill_extras %}
 
 {% block title %}Trouver des collaborateurs{% endblock %}
 
@@ -10,7 +11,7 @@
         <div class="col-lg-4">
             <div class="card p-3 shadow-sm border-0">
                 <h5 class="mb-3">Filtrer les profils</h5>
-                <form method="get">
+                <form id="search-form" method="get" novalidate>
                     {{ form.q|as_crispy_field }}
                     <div class="mb-3">{{ form.education_level|as_crispy_field }}</div>
                     <div class="mb-3">{{ form.language|as_crispy_field }}</div>
@@ -27,6 +28,9 @@
 
         <div class="col-lg-8">
             <h4 class="mb-3">Résultats</h4>
+            {% if not request.GET %}
+                <div class="small text-muted mb-2">Affichage de tous les profils (sauf le vôtre). Utilisez le formulaire pour filtrer.</div>
+            {% endif %}
             {% if results %}
                 <div class="list-group">
                     {% for profile in results %}
@@ -38,10 +42,8 @@
 
                                     <div class="mb-2">
                                         {% if profile.skills %}
-                                            {% for skill in profile.skills.split(',') %}
-                                                {% if skill|trim %}
-                                                    <span class="skill-badge" title="{{ skill|trim }}">{{ skill|trim }}</span>
-                                                {% endif %}
+                                            {% for skill in profile.skills|split:',' %}
+                                                <span class="skill-badge" title="{{ skill }}">{{ skill }}</span>
                                             {% endfor %}
                                         {% else %}
                                             <span class="text-muted small">Aucune compétence renseignée</span>
