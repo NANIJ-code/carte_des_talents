@@ -20,7 +20,19 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'your-secret-key-change-in-production'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else []
+# Configuration ALLOWED_HOSTS pour la production
+ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS', '')
+if ALLOWED_HOSTS_ENV:
+    # Nettoyer et diviser les hosts, enlever les espaces
+    ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_ENV.split(',') if host.strip()]
+else:
+    # En développement local
+    if DEBUG:
+        ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    else:
+        # En production sur Render, accepter tous les domaines *.onrender.com
+        # Pour plus de sécurité, définissez ALLOWED_HOSTS avec votre domaine exact dans Render
+        ALLOWED_HOSTS = ['.onrender.com']
 
 # Application definition
 
