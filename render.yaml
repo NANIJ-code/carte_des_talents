@@ -2,7 +2,7 @@ services:
   - type: web
     name: carte-des-talents
     env: docker
-    dockerfilePath: ./talent-map-app/Dockerfile
+    dockerfilePath: ./Dockerfile
     dockerContext: ./talent-map-app
     plan: free
     buildCommand: ""
